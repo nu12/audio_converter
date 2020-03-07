@@ -9,6 +9,9 @@ Things you may want to cover:
 
 * System dependencies
 
+* * redis-server
+* * ffmpeg
+
 * Configuration
 
 * Database creation
