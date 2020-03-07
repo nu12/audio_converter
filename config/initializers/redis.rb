@@ -1,0 +1,1 @@
+$redis = Redis::Namespace.new("audio_converter", :redis => Redis.new)
