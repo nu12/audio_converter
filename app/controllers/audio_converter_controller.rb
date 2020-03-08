@@ -22,10 +22,8 @@ class AudioConverterController < ApplicationController
   end
 
   def remove
-    original = CGI::unescape(params[:original] )
-    converted = CGI::unescape(params[:converted] ) unless params[:converted].nil?
-    @user.originals -= [ original ]
-    @user.converted -= [ converted ] unless params[:converted].nil?
+    @user.originals -= [ CGI::unescape(params[:original]) ]
+    @user.converted -= [ CGI::unescape(params[:converted]) ] unless params[:converted].nil?
     update_and_redirect "File removed"
   end
 
