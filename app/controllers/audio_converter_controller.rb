@@ -11,10 +11,7 @@ class AudioConverterController < ApplicationController
         file.write(audio.read)
       end
     end   
-    @user.originals.uniq!
-    @user.update
-    flash[:alert] = "Upload complete!"
-    redirect_to root_path 
+    update_and_redirect "Upload complete!"
   end
 
   def convert
@@ -25,10 +22,7 @@ class AudioConverterController < ApplicationController
       system("ffmpeg -y -i #{AudioConverterHelper::path(@user.id)}/#{audio} -b:a #{bitrate}k #{AudioConverterHelper::path(@user.id)}/#{audio.split('.')[0]}.#{format}")
       @user.converted << "#{audio.split('.')[0]}.#{format}"
     end
-    @user.converted.uniq!
-    @user.update
-    flash[:alert] = "Convertion complete!"
-    redirect_to root_path 
+    update_and_redirect "Convertion complete!"
   end
 
   def remove
@@ -36,15 +30,13 @@ class AudioConverterController < ApplicationController
     converted = CGI::unescape(params[:converted] ) unless params[:converted].nil?
     @user.originals -= [ original ]
     @user.converted -= [ converted ] unless params[:converted].nil?
-    @user.update
-    flash[:alert] = "File removed!"
-    redirect_to root_path 
+    update_and_redirect "File removed!"
   end
 
   private
 
   def set_user
-  	@user = User.find_or_create(session)
+    @user = User.find_or_create(session)
     set_new_user if @user.created
   end
 
@@ -52,6 +44,15 @@ class AudioConverterController < ApplicationController
     session[:audio_converter_session] = @user.id
     session[:expires_at] = Time.current + 1.hour    
     FileUtils.mkdir_p(AudioConverterHelper::path(@user.id)) unless File.exist?(AudioConverterHelper::path(@user.id))
+  end
+
+  def update_and_redirect message
+    # Didn't work as after_action callback
+    @user.originals.uniq!
+    @user.converted.uniq!
+    @user.update
+    flash[:alert] = message
+    redirect_to root_path
   end
 
 end
