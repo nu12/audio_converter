@@ -6,7 +6,7 @@ class AudioConverterController < ApplicationController
   def upload
     audios = params[:audios] 
     audios.each do |audio| 
-      File.open(Rails.root.join("public", "#{@user.id}", audio.original_filename), 'wb') do |file|
+      File.open("#{AudioConverterHelper::path(@user.id)}/#{audio.original_filename}", 'wb') do |file|
         @user.originals << audio.original_filename
         file.write(audio.read)
       end
@@ -20,10 +20,9 @@ class AudioConverterController < ApplicationController
   def convert
     format = params[:format]
     bitrate = params[:bitrate]
-    path = Rails.root.join("public", @user.id.to_s).to_s
     @user.converted = []
     @user.originals.each do | audio |
-      system("ffmpeg -y -i #{path}/#{audio} -b:a #{bitrate}k #{path}/#{audio.split('.')[0]}.#{format}")
+      system("ffmpeg -y -i #{AudioConverterHelper::path(@user.id)}/#{audio} -b:a #{bitrate}k #{AudioConverterHelper::path(@user.id)}/#{audio.split('.')[0]}.#{format}")
       @user.converted << "#{audio.split('.')[0]}.#{format}"
     end
     @user.converted.uniq!
@@ -46,12 +45,13 @@ class AudioConverterController < ApplicationController
 
   def set_user
   	@user = User.find_or_create(session)
-    if @user.created
-      session[:audio_converter_session] = @user.id
-      session[:expires_at] = Time.current + 1.hour
-      path = Rails.root.join("public", @user.id.to_s).to_s
-      FileUtils.mkdir_p(path) unless File.exist?(path)
-    end
+    set_new_user if @user.created
+  end
+
+  def set_new_user
+    session[:audio_converter_session] = @user.id
+    session[:expires_at] = Time.current + 1.hour    
+    FileUtils.mkdir_p(AudioConverterHelper::path(@user.id)) unless File.exist?(AudioConverterHelper::path(@user.id))
   end
 
 end

@@ -5,4 +5,8 @@ module AudioConverterHelper
         sprintf("%%%02X", m.unpack1("C"))
       }
     end
+
+    def self.path(user_id)
+    	Rails.root.join("public", user_id.to_s).to_s
+    end
 end
