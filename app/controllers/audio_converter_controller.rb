@@ -1,12 +1,9 @@
 class AudioConverterController < ApplicationController
+  before_action :set_user
   def index
-  	@user = set_user
-    path = Rails.root.join("public", @user.id.to_s).to_s
-    FileUtils.mkdir_p(path) unless File.exist?(path)
   end
 
   def upload
-    @user = set_user
     audios = params[:audios] 
     audios.each do |audio| 
       File.open(Rails.root.join("public", "#{@user.id}", audio.original_filename), 'wb') do |file|
@@ -21,7 +18,6 @@ class AudioConverterController < ApplicationController
   end
 
   def convert
-    @user = set_user
     format = params[:format] 
     path = Rails.root.join("public", @user.id.to_s).to_s
     @user.converted = []
@@ -36,7 +32,6 @@ class AudioConverterController < ApplicationController
   end
 
   def remove
-    @user = set_user
     original = CGI::unescape(params[:original] )
     converted = CGI::unescape(params[:converted] ) unless params[:converted].nil?
     @user.originals -= [ original ]
@@ -49,13 +44,13 @@ class AudioConverterController < ApplicationController
   private
 
   def set_user
-  	if session[:audio_converter_session].nil?
-  		u = User.new
-  		session[:audio_converter_session] = u.id
-  	else
-  		u = User.new session[:audio_converter_session].to_i
-  	end
-  	return u
+  	@user = User.find_or_create(session)
+    if @user.created
+      session[:audio_converter_session] = @user.id
+      session[:expires_at] = Time.current + 1.hour
+      path = Rails.root.join("public", @user.id.to_s).to_s
+      FileUtils.mkdir_p(path) unless File.exist?(path)
+    end
   end
 
 end
