@@ -7,7 +7,7 @@ module AudioConverterHelper
     end
 
     def self.path(user_id)
-    	Rails.root.join("public", user_id.to_s).to_s
+    	Rails.root.join("storage", user_id.to_s).to_s
     end
 
     def self.write_file user_id, audio
@@ -15,6 +15,7 @@ module AudioConverterHelper
         file.write(audio.read)
       end
   	end
+
   	def self.convert user_id, audio, format, bitrate
   		system("ffmpeg -y -i #{AudioConverterHelper::path(user_id)}/#{audio} -b:a #{bitrate}k #{AudioConverterHelper::path(user_id)}/#{audio.split('.')[0]}.#{format}")
   	end

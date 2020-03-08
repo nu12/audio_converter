@@ -4,5 +4,6 @@ Rails.application.routes.draw do
   post "/upload", to: "audio_converter#upload"
   post "/convert", to: "audio_converter#convert"
   get "/remove/:original/(:converted)", to: "audio_converter#remove"
+  get "/download/:audio", to: "audio_converter#download"
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

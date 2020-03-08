@@ -27,6 +27,15 @@ class AudioConverterController < ApplicationController
     update_and_redirect "File removed"
   end
 
+  def download
+    file_path = "#{AudioConverterHelper.path(@user.id)}/#{CGI::unescape(params[:audio])}"
+    if File.exist?(file_path)
+      send_file file_path
+    else
+      redirect_to root_path
+    end  
+  end
+
   private
 
   def set_user

@@ -14,6 +14,6 @@
 <% end %>
 
 <% Hash[@user.originals.zip(@user.converted)].each do | original, converted | %>
-<p><%= original %>, <%= converted %>, <%= link_to "Remove", controller: :audio_converter, action: :remove, original: AudioConverterHelper::url_encode(original), converted: AudioConverterHelper::url_encode(converted) %>, <%= link_to_if converted, "Download", "#{@user.id}/#{converted}" %></p>
+<p><%= original %>, <%= converted %>, <%= link_to "Remove", controller: :audio_converter, action: :remove, original: AudioConverterHelper::url_encode(original), converted: AudioConverterHelper::url_encode(converted) %>, <%= link_to_if converted, "Download", controller: :audio_converter, action: :download, audio: AudioConverterHelper::url_encode(converted) %></p>
 
 <% end %>
