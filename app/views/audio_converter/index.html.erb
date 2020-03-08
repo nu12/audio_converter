@@ -3,7 +3,7 @@
 <%= @user.inspect %>
 
 <%= form_with(url: "/upload", method: "post") do |f| %>
-	<%= f.file_field :audios, :multiple => true %>
+	<%= f.file_field :audios, :multiple => true, accept: 'audio/mp3' %>
   <%= submit_tag("Send files") %>
 <% end %>
 

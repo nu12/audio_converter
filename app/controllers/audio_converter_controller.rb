@@ -6,8 +6,11 @@ class AudioConverterController < ApplicationController
   def upload
     audios = params[:audios] 
     audios.each do | audio | 
-      AudioConverterHelper::write_file(@user.id, audio)
-      @user.originals << audio.original_filename
+      if audio.content_type == 'audio/mpeg'
+        sanitized = AudioConverterHelper::sanitize(audio.original_filename)
+        AudioConverterHelper::write_file(@user.id, audio, sanitized)
+        @user.originals << sanitized
+      end
     end   
     update_and_redirect "Upload complete"
   end

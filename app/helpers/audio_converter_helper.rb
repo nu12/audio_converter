@@ -10,8 +10,8 @@ module AudioConverterHelper
     	Rails.root.join("storage", user_id.to_s).to_s
     end
 
-    def self.write_file user_id, audio
-    	File.open("#{AudioConverterHelper::path(user_id)}/#{audio.original_filename}", 'wb') do |file|
+    def self.write_file user_id, audio, sanitized
+    	File.open("#{AudioConverterHelper::path(user_id)}/#{sanitized}", 'wb') do |file|
         file.write(audio.read)
       end
   	end
@@ -20,4 +20,10 @@ module AudioConverterHelper
   		system("ffmpeg -y -i #{AudioConverterHelper::path(user_id)}/#{audio} -b:a #{bitrate}k #{AudioConverterHelper::path(user_id)}/#{audio.split('.')[0]}.#{format}")
   	end
 
+    def self.sanitize original
+      return original.gsub!(/[\(\)\s\-\;]/,"")
+    end
+
 end
+
+
