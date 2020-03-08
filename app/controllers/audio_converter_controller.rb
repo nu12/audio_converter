@@ -1,4 +1,4 @@
-class WelcomeController < ApplicationController
+class AudioConverterController < ApplicationController
   def index
   	@user = set_user
     path = Rails.root.join("public", @user.id.to_s).to_s
