@@ -31,13 +31,11 @@ class AudioConverterController < ApplicationController
 
   def set_user
     @user = User.find_or_create(session)
-    set_new_user if @user.created
-  end
-
-  def set_new_user
     session[:audio_converter_session] = @user.id
-    session[:expires_at] = Time.current + 1.hour    
-    FileUtils.mkdir_p(AudioConverterHelper::path(@user.id)) unless File.exist?(AudioConverterHelper::path(@user.id))
+    unless File.exist?(AudioConverterHelper::path(@user.id))
+      FileUtils.mkdir_p(AudioConverterHelper::path(@user.id)) 
+      RemoveFilesJob.set(wait: 1.hour).perform_later(@user.id)
+    end
   end
 
   def update_and_redirect message
