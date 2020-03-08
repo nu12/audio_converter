@@ -11,7 +11,7 @@ class AudioConverterController < ApplicationController
         file.write(audio.read)
       end
     end   
-    update_and_redirect "Upload complete!"
+    update_and_redirect "Upload complete"
   end
 
   def convert
@@ -22,7 +22,7 @@ class AudioConverterController < ApplicationController
       system("ffmpeg -y -i #{AudioConverterHelper::path(@user.id)}/#{audio} -b:a #{bitrate}k #{AudioConverterHelper::path(@user.id)}/#{audio.split('.')[0]}.#{format}")
       @user.converted << "#{audio.split('.')[0]}.#{format}"
     end
-    update_and_redirect "Convertion complete!"
+    update_and_redirect "Convertion complete"
   end
 
   def remove
@@ -30,7 +30,7 @@ class AudioConverterController < ApplicationController
     converted = CGI::unescape(params[:converted] ) unless params[:converted].nil?
     @user.originals -= [ original ]
     @user.converted -= [ converted ] unless params[:converted].nil?
-    update_and_redirect "File removed!"
+    update_and_redirect "File removed"
   end
 
   private
