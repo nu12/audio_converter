@@ -13,6 +13,6 @@
 <% end %>
 
 <% Hash[@user.originals.zip(@user.converted)].each do | original, converted | %>
-<p><%= original %>, <%= converted %>, <%= link_to "Remove", "#{@user.id}/#{original}/#{converted}" %>, <%= link_to_if converted, "Download", "#{@user.id}/#{converted}" %></p>
+<p><%= original %>, <%= converted %>, <%= link_to "Remove", controller: :welcome, action: :remove, original: WelcomeHelper::url_encode(original), converted: WelcomeHelper::url_encode(converted) %>, <%= link_to_if converted, "Download", "#{@user.id}/#{converted}" %></p>
 
 <% end %>

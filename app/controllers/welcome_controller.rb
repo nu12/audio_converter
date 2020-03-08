@@ -35,6 +35,17 @@ class WelcomeController < ApplicationController
     redirect_to root_path 
   end
 
+  def remove
+    @user = set_user
+    original = CGI::unescape(params[:original] )
+    converted = CGI::unescape(params[:converted] ) unless params[:converted].nil?
+    @user.originals -= [ original ]
+    @user.converted -= [ converted ] unless params[:converted].nil?
+    @user.update
+    flash[:alert] = "File removed!"
+    redirect_to root_path 
+  end
+
   private
 
   def set_user

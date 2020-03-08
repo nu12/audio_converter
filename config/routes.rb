@@ -3,5 +3,6 @@ Rails.application.routes.draw do
   get 'welcome/index'
   post "/welcome/upload/:id", to: "welcome#upload"
   post "/welcome/convert/:id", to: "welcome#convert"
+  get "/remove/:original/(:converted)", to: "welcome#remove"
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
