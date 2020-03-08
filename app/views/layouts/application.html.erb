@@ -10,11 +10,19 @@
   </head>
 
   <body>
-    <% flash.each do |key, value| %>
-      <div class="<%= key %>">
-            <%= value %>
-      </div>
-    <% end %>
-    <%= yield %>
+    <div class="container has-text-centered">
+      <header class="header">
+        <h1 class="title">Audio Converter</h1>
+      </header>
+      <% flash.each do |key, value| %>
+        <div class=" notification<%= key %>">
+              <%= value %>
+        </div>
+      <% end %>
+      <%= yield %>
+    </div>
+    <footer class="footer">
+      
+    </footer>
   </body>
 </html>

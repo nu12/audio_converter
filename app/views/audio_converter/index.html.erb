@@ -1,19 +1,51 @@
-<h1>Welcome#index</h1>
-<p>Find me in app/views/welcome/index.html.erb</p>
-<%= @user.inspect %>
+<section class="section">
+	<h2 class="subtitle">Upload area</h2>
+	<%= form_with(url: "/upload", method: "post", :class => "form columns" ) do |f| %>
+		<%= f.file_field :audios, :multiple => true, accept: 'audio/mp3', :class => "input is-10" %>
+	  	<%= submit_tag "Upload", :class => "button is-2" %>
+	<% end %>
+</section>
 
-<%= form_with(url: "/upload", method: "post") do |f| %>
-	<%= f.file_field :audios, :multiple => true, accept: 'audio/mp3' %>
-  <%= submit_tag("Send files") %>
-<% end %>
+<% if @user.originals.size > 0 %>
 
-<%= form_with(url: "/convert", method: "post") do |f| %>
-	<%= select_tag "format", options_for_select([ "aac", "ogg" ], "aac") %>
-	<%= select_tag "bitrate", options_for_select([ "192", "128", "96" ], "192") %>
-  <%= submit_tag("Convert") %>
-<% end %>
+<section class="section">
+	<h2 class="subtitle">Convertion options</h2>
+		<%= form_with(url: "/convert", method: "post", :class => "form" ) do |f| %>
+			<div class="columns is-vcentered is-clearfix">
+				<div class="column is-2 label">Format</div>
+				<div class="column is-10">
+					<%= select_tag "format", options_for_select([ "aac", "ogg" ], "aac"), :class => "input" %>
+				</div>
+			</div>
+			<div class="columns is-vcentered is-clearfix">
+				<div class="column is-2 label">Bitrate</div>
+				<div class="column is-10">
+					<%= select_tag "bitrate", options_for_select([ "192", "128", "96" ], "192"), :class => "input" %>
+				</div>
+			</div>
+			<%= button_tag("Convert", :id => "convert-button", :class => "button is-fullwidth is-primary") %>
+		<% end %>
+</section>
 
-<% Hash[@user.originals.zip(@user.converted)].each do | original, converted | %>
-<p><%= original %>, <%= converted %>, <%= link_to "Remove", controller: :audio_converter, action: :remove, original: AudioConverterHelper::url_encode(original), converted: AudioConverterHelper::url_encode(converted) %>, <%= link_to_if converted, "Download", controller: :audio_converter, action: :download, audio: AudioConverterHelper::url_encode(converted) %></p>
+<section class="section" id="files-table">
+	<h2 class="subtitle">Files</h2>
+	<table class="table is-fullwidth">
+	<thead>
+		<th>Original file</th>
+		<th>Converted file</th>
+		<th colspan='2'>Actions</th>
+	</thead>
+	<tbody>
+		<% Hash[@user.originals.zip(@user.converted)].each do | original, converted | %>
+		<tr>
+			<td><%= original %></td>
+			<td><%= converted %></td>
+			<td><%= link_to "Remove", controller: :audio_converter, action: :remove, original: AudioConverterHelper::url_encode(original), converted: AudioConverterHelper::url_encode(converted) %></td>
+			<td><%= link_to_if converted, "Download", controller: :audio_converter, action: :download, audio: AudioConverterHelper::url_encode(converted) %></td>
+		</tr>
+		<% end %>
+	</tbody>
+	</table>
+</section>
 
 <% end %>

@@ -15,3 +15,11 @@ require("channels")
 //
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
+
+document.addEventListener("turbolinks:load", function() {
+	document.getElementById("convert-button").addEventListener("click", function(e){
+		this.classList.add("is-loading")
+		document.getElementById("files-table").classList.add("is-hidden")
+		
+	})
+})
