@@ -5,11 +5,9 @@ class AudioConverterController < ApplicationController
 
   def upload
     audios = params[:audios] 
-    audios.each do |audio| 
-      File.open("#{AudioConverterHelper::path(@user.id)}/#{audio.original_filename}", 'wb') do |file|
-        @user.originals << audio.original_filename
-        file.write(audio.read)
-      end
+    audios.each do | audio | 
+      AudioConverterHelper::write_file(@user.id, audio)
+      @user.originals << audio.original_filename
     end   
     update_and_redirect "Upload complete"
   end

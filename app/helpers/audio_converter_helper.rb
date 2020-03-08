@@ -9,4 +9,10 @@ module AudioConverterHelper
     def self.path(user_id)
     	Rails.root.join("public", user_id.to_s).to_s
     end
+
+    def self.write_file user_id, audio
+    	File.open("#{AudioConverterHelper::path(user_id)}/#{audio.original_filename}", 'wb') do |file|
+        file.write(audio.read)
+      end
+  end
 end
