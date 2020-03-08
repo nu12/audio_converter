@@ -13,12 +13,10 @@ class AudioConverterController < ApplicationController
   end
 
   def convert
-    format = params[:format]
-    bitrate = params[:bitrate]
     @user.converted = []
     @user.originals.each do | audio |
-      system("ffmpeg -y -i #{AudioConverterHelper::path(@user.id)}/#{audio} -b:a #{bitrate}k #{AudioConverterHelper::path(@user.id)}/#{audio.split('.')[0]}.#{format}")
-      @user.converted << "#{audio.split('.')[0]}.#{format}"
+      AudioConverterHelper::convert(@user.id, audio, params[:format], params[:bitrate])
+      @user.converted << "#{audio.split('.')[0]}.#{params[:format]}"
     end
     update_and_redirect "Convertion complete"
   end
