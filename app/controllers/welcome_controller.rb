@@ -26,7 +26,7 @@ class WelcomeController < ApplicationController
     path = Rails.root.join("public", @user.id.to_s).to_s
     @user.converted = []
     @user.originals.each do | audio |
-      system("ffmpeg -y -i #{path}/#{audio} #{path}/#{audio.split('.')[0]}.#{format}")
+      system("ffmpeg -y -i #{path}/#{audio} -b:a 128k #{path}/#{audio.split('.')[0]}.#{format}")
       @user.converted << "#{audio.split('.')[0]}.#{format}"
     end
     @user.converted.uniq!
