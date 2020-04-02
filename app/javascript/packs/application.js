@@ -17,9 +17,25 @@ require("channels")
 // const imagePath = (name) => images(name, true)
 
 document.addEventListener("turbolinks:load", function() {
-	document.getElementById("convert-button").addEventListener("click", function(e){
-		this.classList.add("is-loading")
-		document.getElementById("files-table").classList.add("is-hidden")
-		
-	})
+	// Hide screen elements during convertion
+	var convert_button = document.getElementById("convert-button");
+	if (convert_button){
+		document.getElementById("convert-button").addEventListener("click", function(e){
+			this.classList.add("is-loading")
+			document.getElementById("files-table").classList.add("is-hidden")
+			
+		})
+	};
+
+	// Close notification panel
+	(document.querySelectorAll('.delete') || []).forEach(($delete) => {
+		$notification = $delete.parentNode;
+
+		$notification.classList.add("fade-out");
+
+		$delete.addEventListener('click', () => {
+			$notification.parentNode.removeChild($notification);
+		});
+		});
 })
+

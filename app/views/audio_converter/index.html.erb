@@ -7,45 +7,55 @@
 </section>
 
 <% if @user.originals.size > 0 %>
-
-<section class="section">
-	<h2 class="subtitle">Convertion options</h2>
-		<%= form_with(url: "/convert", method: "post", :class => "form" ) do |f| %>
-			<div class="columns is-vcentered is-clearfix">
-				<div class="column is-2 label">Format</div>
-				<div class="column is-10">
-					<%= select_tag "format", options_for_select([ "aac", "ogg" ], "aac"), :class => "input" %>
+<!-- Displays convertion options and files -->
+	<section class="section">
+		<h2 class="subtitle">Convertion options</h2>
+			<%= form_with(url: "/convert", method: "post", :class => "form" ) do |f| %>
+				<div class="columns is-vcentered is-clearfix">
+					<div class="column is-2 label">Format</div>
+					<div class="column is-10">
+						<%= select_tag "format", options_for_select([ "aac", "ogg" ], "aac"), :class => "input" %>
+					</div>
 				</div>
-			</div>
-			<div class="columns is-vcentered is-clearfix">
-				<div class="column is-2 label">Bitrate</div>
-				<div class="column is-10">
-					<%= select_tag "bitrate", options_for_select([ "192", "128", "96" ], "192"), :class => "input" %>
+				<div class="columns is-vcentered is-clearfix">
+					<div class="column is-2 label">Bitrate</div>
+					<div class="column is-10">
+						<%= select_tag "bitrate", options_for_select([ "192", "128", "96" ], "192"), :class => "input" %>
+					</div>
 				</div>
-			</div>
-			<%= button_tag("Convert", :id => "convert-button", :class => "button is-fullwidth is-primary") %>
-		<% end %>
-</section>
+				<%= button_tag("Convert", :id => "convert-button", :class => "button is-fullwidth is-primary") %>
+			<% end %>
+	</section>
 
-<section class="section" id="files-table">
-	<h2 class="subtitle">Files</h2>
-	<table class="table is-fullwidth">
-	<thead>
-		<th>Original file</th>
-		<th>Converted file</th>
-		<th colspan='2'>Actions</th>
-	</thead>
-	<tbody>
-		<% Hash[@user.originals.zip(@user.converted)].each do | original, converted | %>
-		<tr>
-			<td><%= original %></td>
-			<td><%= converted %></td>
-			<td><%= link_to "Remove", controller: :audio_converter, action: :remove, original: AudioConverterHelper::url_encode(original), converted: AudioConverterHelper::url_encode(converted) %></td>
-			<td><%= link_to_if converted, "Download", controller: :audio_converter, action: :download, audio: AudioConverterHelper::url_encode(converted) %></td>
-		</tr>
-		<% end %>
-	</tbody>
-	</table>
+	<section class="section" id="files-table">
+		<h2 class="subtitle">Files</h2>
+		<table class="table is-fullwidth">
+		<thead>
+			<th>Original file</th>
+			<th>Converted file</th>
+			<th colspan='2'>Actions</th>
+		</thead>
+		<tbody>
+			<% Hash[@user.originals.zip(@user.converted)].each do | original, converted | %>
+			<tr>
+				<td><%= original %></td>
+				<td><%= converted %></td>
+				<td><%= link_to "Remove", controller: :audio_converter, action: :remove, original: AudioConverterHelper::url_encode(original), converted: AudioConverterHelper::url_encode(converted) %></td>
+				<td><%= link_to_if converted, "Download", controller: :audio_converter, action: :download, audio: AudioConverterHelper::url_encode(converted) %></td>
+			</tr>
+			<% end %>
+		</tbody>
+		</table>
+	</section>
+
+<% else %>
+<!-- Displays empty canvas -->
+
+<section class="section container">
+	<span class="icon is-size-1">
+		<i class="fas fa-cloud-upload-alt"></i>
+	</span>
+	<p>Upload audio files to start</p>
 </section>
 
 <% end %>

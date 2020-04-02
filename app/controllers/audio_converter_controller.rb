@@ -55,7 +55,7 @@ class AudioConverterController < ApplicationController
     @user.originals.uniq!
     @user.converted.uniq!
     @user.update
-    flash[:alert] = message
+    flash[:success] = message
     redirect_to root_path
   end
 
