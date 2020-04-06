@@ -17,25 +17,32 @@ require("channels")
 // const imagePath = (name) => images(name, true)
 
 document.addEventListener("turbolinks:load", function() {
-	// Hide screen elements during convertion
+	// Change screen elements while converting
 	var convert_button = document.getElementById("convert-button");
 	if (convert_button){
 		document.getElementById("convert-button").addEventListener("click", function(e){
-			this.classList.add("is-loading")
-			document.getElementById("files-table").classList.add("is-hidden")
-			
-		})
+			// Display loading icon
+			this.classList.add("is-loading");
+
+			// Hide upload section
+			(document.querySelectorAll('td.action, section.upload') || []).forEach(($td) => {
+				$td.innerHTML = "";
+			});
+
+			// Replace converted file name
+			(document.querySelectorAll('.converted') || []).forEach(($td) => {
+				$td.innerHTML = "Converting...";
+			});
+		});
 	};
 
 	// Close notification panel
 	(document.querySelectorAll('.delete') || []).forEach(($delete) => {
 		$notification = $delete.parentNode;
-
 		$notification.classList.add("fade-out");
-
 		$delete.addEventListener('click', () => {
 			$notification.parentNode.removeChild($notification);
 		});
-		});
+	});
 })
 
