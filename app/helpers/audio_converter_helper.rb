@@ -22,6 +22,7 @@ module AudioConverterHelper
         audio = user.originals[i]
         AudioConverterHelper::convert(user.id, audio, format, bitrate)
         converted << "#{audio.split('.')[0]}.#{format}"
+        ConvertUpdaterJob.perform_now(user.id, i)
       end
       return converted
     end

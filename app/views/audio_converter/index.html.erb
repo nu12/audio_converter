@@ -39,7 +39,7 @@
 			<% Hash[@user.originals.zip(@user.converted)].each do | original, converted | %>
 			<tr>
 				<td class="original"><%= original %></td>
-				<td class="converted <%= original %>"><%= converted %></td>
+				<td class="converted"><%= converted %></td>
 				<td class="action"><%= link_to "Remove", controller: :audio_converter, action: :remove, original: AudioConverterHelper::url_encode(original), converted: AudioConverterHelper::url_encode(converted) %></td>
 				<td class="action"><%= link_to_if converted, "Download", controller: :audio_converter, action: :download, audio: AudioConverterHelper::url_encode(converted) %></td>
 			</tr>
