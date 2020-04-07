@@ -19,16 +19,15 @@ module AudioConverterHelper
     def self.convert_all user, format, bitrate
       converted = []
       user.originals.each_index do | i |
-        audio = user.originals[i]
-        AudioConverterHelper::convert(user.id, audio, format, bitrate)
-        converted << "#{audio.split('.')[0]}.#{format}"
-        ConvertUpdaterJob.perform_now(user.id, i)
+        ConvertUpdaterJob.perform_now(user.id, {value: i, max: user.originals.size})
+        converted << AudioConverterHelper::convert(user.id, user.originals[i], format, bitrate)
       end
-      return converted
+      return converted # Return list of all converted files
     end
 
   	def self.convert user_id, audio, format, bitrate
-  		system("ffmpeg -y -i #{AudioConverterHelper::path(user_id)}/#{audio} -b:a #{bitrate}k #{AudioConverterHelper::path(user_id)}/#{audio.split('.')[0]}.#{format}")
+      system("ffmpeg -y -i #{AudioConverterHelper::path(user_id)}/#{audio} -b:a #{bitrate}k #{AudioConverterHelper::path(user_id)}/#{audio.split('.')[0]}.#{format}")
+      return "#{audio.split('.')[0]}.#{format}" # Return name of the new file
   	end
 
     def self.sanitize original
