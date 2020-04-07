@@ -24,14 +24,17 @@ document.addEventListener("turbolinks:load", function() {
 			// Display loading icon
 			this.classList.add("is-loading");
 
-			// Hide upload section
-			(document.querySelectorAll('td.action, section.upload') || []).forEach(($td) => {
+			// Replace upload section with a progress bar
+			document.querySelector("section.upload").innerHTML = "<progress id='progress-bar' class='progress is-primary' value='0' max='1'></progress>";
+
+			// Hide action buttons
+			(document.querySelectorAll('td.action') || []).forEach(($td) => {
 				$td.innerHTML = "";
 			});
 
 			// Replace converted file name
 			(document.querySelectorAll('.converted') || []).forEach(($td) => {
-				$td.innerHTML = "Converting...";
+				$td.innerHTML = "Queued";
 			});
 		});
 	};

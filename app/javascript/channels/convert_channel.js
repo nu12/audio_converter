@@ -13,8 +13,17 @@ document.addEventListener("turbolinks:load", function() {
   
     received(data) {
       // Called when there's incoming data on the websocket for this channel
-      console.log(data)
-      document.querySelectorAll('td.converted')[data["index"]].innerHTML = "Converted!";
+      // Update progress bar
+      document.getElementById("progress-bar").value = data["value"] / data["max"];
+      
+      // Update table rows
+      (document.querySelectorAll('td.converted')).forEach(($row, $index) => {
+        if($index < data["value"]){
+          $row.innerHTML = "Success"
+        }else if($index == data["value"]){
+          $row.innerHTML = "Converting..."
+        }
+      });
     }
   });
 });
