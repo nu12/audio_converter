@@ -14,7 +14,17 @@ module AudioConverterHelper
     	File.open("#{AudioConverterHelper::path(user_id)}/#{sanitized}", 'wb') do |file|
         file.write(audio.read)
       end
-  	end
+    end
+    
+    def self.convert_all user, format, bitrate
+      converted = []
+      user.originals.each_index do | i |
+        audio = user.originals[i]
+        AudioConverterHelper::convert(user.id, audio, format, bitrate)
+        converted << "#{audio.split('.')[0]}.#{format}"
+      end
+      return converted
+    end
 
   	def self.convert user_id, audio, format, bitrate
   		system("ffmpeg -y -i #{AudioConverterHelper::path(user_id)}/#{audio} -b:a #{bitrate}k #{AudioConverterHelper::path(user_id)}/#{audio.split('.')[0]}.#{format}")

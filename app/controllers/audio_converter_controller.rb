@@ -16,11 +16,7 @@ class AudioConverterController < ApplicationController
   end
 
   def convert
-    @user.converted = []
-    @user.originals.each do | audio |
-      AudioConverterHelper::convert(@user.id, audio, params[:format], params[:bitrate])
-      @user.converted << "#{audio.split('.')[0]}.#{params[:format]}"
-    end
+    @user.converted = AudioConverterHelper::convert_all(@user, params[:format], params[:bitrate])
     update_and_redirect "Convertion complete"
   end
 
