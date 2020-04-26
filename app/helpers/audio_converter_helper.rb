@@ -31,7 +31,7 @@ module AudioConverterHelper
   	end
 
     def self.sanitize original
-      return original.gsub!(/[\"\'\(\)\s\-\;\,]/,"")
+      return original.gsub!(/[\"\'\(\)\s\-\;\,]/,"") || original # gsub! returns nil if no substitutions were performed
     end
 
 end
