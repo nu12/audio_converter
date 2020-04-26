@@ -16,8 +16,12 @@ class AudioConverterController < ApplicationController
   end
 
   def convert
-    @user.converted = AudioConverterHelper::convert_all(@user, params[:format], params[:bitrate])
-    update_and_redirect "Convertion complete"
+    if ["ogg","aac","mp3","wav"].include? params[:format]
+      @user.converted = AudioConverterHelper::convert_all(@user, params[:format], params[:bitrate])
+      update_and_redirect "Convertion complete"
+    else
+      update_and_redirect "File format not supported", :danger
+    end
   end
 
   def remove
@@ -46,12 +50,12 @@ class AudioConverterController < ApplicationController
     end
   end
 
-  def update_and_redirect message
+  def update_and_redirect message, type = :success
     # Didn't work as after_action callback
     @user.originals.uniq!
     @user.converted.uniq!
     @user.update
-    flash[:success] = message
+    flash[type] = message
     redirect_to root_path
   end
 
