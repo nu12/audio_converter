@@ -1,7 +1,7 @@
 <section class="section upload">
 	<h2 class="subtitle">Upload area</h2>
 	<%= form_with(url: "/upload", method: "post", :class => "form columns" ) do |f| %>
-		<%= f.file_field :audios, :multiple => true, accept: 'audio/mp3', :class => "input is-10" %>
+		<%= f.file_field :audios, :multiple => true, accept: 'audio/mp3,audio/wav', :class => "input is-10" %>
 	  	<%= submit_tag "Upload", :class => "button is-2" %>
 	<% end %>
 </section>
@@ -14,7 +14,7 @@
 				<div class="columns is-vcentered is-clearfix">
 					<div class="column is-2 label">Format</div>
 					<div class="column is-10">
-						<%= select_tag "format", options_for_select([ "aac", "ogg" ], "aac"), :class => "input" %>
+						<%= select_tag "format", options_for_select([ "aac", "ogg", "mp3", "wav" ], "aac"), :class => "input" %>
 					</div>
 				</div>
 				<div class="columns is-vcentered is-clearfix">
