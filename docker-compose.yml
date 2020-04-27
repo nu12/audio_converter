@@ -1,0 +1,14 @@
+version: '2'
+
+services: 
+    audio_converter:
+        build: .
+        ports: 
+            - "3000:3000"
+        links:
+            - "redis"
+        environment: 
+            SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+        restart: unless-stopped
+    redis:
+        image: redis:5.0

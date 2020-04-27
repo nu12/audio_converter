@@ -24,4 +24,6 @@ Things you may want to cover:
 
 * Deployment instructions
 
+* * SECRET_KEY_BASE=your_secret_key_base_here docker-compose up
+
 * ...

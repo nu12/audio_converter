@@ -1,1 +1,1 @@
-$redis = Redis::Namespace.new("audio_converter", :redis => Redis.new)
+$redis = Redis::Namespace.new("audio_converter", :redis => Redis.new(host: Rails.env == "production" ? "redis" : "localhost"))
