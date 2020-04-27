@@ -15,9 +15,9 @@ RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - \
 
 COPY . /app/
 
-RUN bundle install \
+RUN bundle install --without development test \
  && yarn install \
- && rails webpacker:compile
+ && RAILS_ENV=production rails assets:precompile
 
 EXPOSE 3000
 
