@@ -1,29 +1,18 @@
-# README
+# Audio Converter
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Featuring redis-server as cache database, ActionCable implementation and ffmpeg  tool.
 
-Things you may want to cover:
+## Production: Docker
+```shell
+$ git clone https://github.com/nu12/audio_converter.git
+$ SECRET_KEY_BASE=your_secret_key_base_here docker-compose up
+```
 
-* Ruby version
+## Development: Vagrant
 
-* System dependencies
+Install `redis-server` and `ffmpeg` in the development environment. 
 
-* * redis-server
-* * ffmpeg
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* * SECRET_KEY_BASE=your_secret_key_base_here docker-compose up
-
-* ...
+```shell
+$ git clone https://github.com/nu12/audio_converter.git
+$ vagrant up && vagrant ssh
+```
