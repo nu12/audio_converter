@@ -6,7 +6,7 @@ class AudioConverterController < ApplicationController
   def upload
     audios = params[:audios] 
     audios.each do | audio | 
-      if ["audio/mpeg", "audio/x-wav"].include? audio.content_type
+      if ["audio/mpeg", "audio/x-wav", "audio/wav"].include? audio.content_type
         sanitized = AudioConverterHelper::sanitize(audio.original_filename)
         AudioConverterHelper::write_file(@user.id, audio, sanitized)
         @user.originals << sanitized
