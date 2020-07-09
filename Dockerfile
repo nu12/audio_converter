@@ -1,4 +1,4 @@
-FROM ruby:2.6.5
+FROM ruby:2.6.5-alpine
 
 WORKDIR /app
 
@@ -6,18 +6,15 @@ ENV RAILS_LOG_TO_STDOUT=true \
     RAILS_ENV=production \
     RAILS_SERVE_STATIC_FILES=true
 
-RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - \
-    && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
-    && apt-get update  \
-    && apt-get install -y nodejs yarn ffmpeg \
-    && rm -rf /var/lib/apt/lists/*
+COPY Gemfile package.json yarn.lock /app/
 
-COPY . /app/
-
-RUN bundle install --without development test \
+RUN apk add --no-cache nodejs yarn ffmpeg build-base tzdata \
+ && bundle install --without development test \
  && yarn install \
- && RAILS_ENV=production rails assets:precompile
+ && RAILS_ENV=production rails assets:precompile \
+ && apk del build-base
+
+ COPY . /app/
 
 EXPOSE 3000
 
