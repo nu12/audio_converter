@@ -10,11 +10,11 @@ COPY Gemfile package.json yarn.lock /app/
 
 RUN apk add --no-cache nodejs yarn ffmpeg build-base tzdata \
  && bundle install --without development test \
- && yarn install \
- && RAILS_ENV=production rails assets:precompile \
  && apk del build-base
 
- COPY . /app/
+COPY . /app/
+
+RUN bin/rails assets:precompile
 
 EXPOSE 3000
 
