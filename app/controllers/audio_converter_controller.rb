@@ -1,12 +1,12 @@
 class AudioConverterController < ApplicationController
-  before_action :set_user
+  before_action :set_user, :set_application_options
   def index
   end
 
   def upload
     audios = params[:audios] 
     audios.each do | audio | 
-      if ["audio/mpeg", "audio/x-wav", "audio/wav", "video/mp4"].include? audio.content_type
+      if @input_formats.include? audio.content_type
         sanitized = AudioConverterHelper::sanitize(audio.original_filename)
         AudioConverterHelper::write_file(@user.id, audio, sanitized)
         @user.originals << sanitized
@@ -16,7 +16,7 @@ class AudioConverterController < ApplicationController
   end
 
   def convert
-    if ["ogg","aac","mp3","wav"].include? params[:format]
+    if @form_convert_options.include? params[:format]
       @user.converted = AudioConverterHelper::convert_all(@user, params[:format], params[:bitrate])
       update_and_redirect "Convertion complete"
     else
@@ -57,6 +57,13 @@ class AudioConverterController < ApplicationController
     @user.update
     flash[type] = message
     redirect_to root_path
+  end
+
+  def set_application_options
+    @input_formats = ["audio/mpeg", "audio/x-wav", "audio/wav", "video/mp4"]
+    @form_input_formats = 'audio/mp3,audio/wav,video/mp4'
+    @form_convert_options = [ "aac", "ogg", "mp3", "wav" ]
+    @form_bitrate_options = [ "192", "128", "96" ]
   end
 
 end
