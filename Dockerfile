@@ -6,15 +6,12 @@ ENV RAILS_LOG_TO_STDOUT=true \
     RAILS_ENV=production \
     RAILS_SERVE_STATIC_FILES=true
 
-COPY Gemfile package.json yarn.lock /app/
+COPY . /app/
 
 RUN apk add --no-cache nodejs yarn ffmpeg build-base tzdata \
  && bundle install --without development test \
- && apk del build-base
-
-COPY . /app/
-
-RUN bin/rails assets:precompile
+ && bin/rails assets:precompile \
+ && apk del build-base nodejs yarn
 
 EXPOSE 3000
 
