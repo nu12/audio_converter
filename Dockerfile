@@ -1,3 +1,18 @@
+FROM ruby:2.6.5-alpine as builder
+
+ENV RAILS_ENV=production
+
+WORKDIR /app
+
+COPY Gemfile package.json yarn.lock /app/
+
+RUN apk add --no-cache nodejs yarn build-base tzdata \
+ && bundle install --without development test
+
+COPY . /app/
+
+RUN bin/rails assets:precompile
+
 FROM ruby:2.6.5-alpine
 
 WORKDIR /app
@@ -6,12 +21,10 @@ ENV RAILS_LOG_TO_STDOUT=true \
     RAILS_ENV=production \
     RAILS_SERVE_STATIC_FILES=true
 
-COPY . /app/
+RUN apk add --no-cache ffmpeg tzdata
 
-RUN apk add --no-cache nodejs yarn ffmpeg build-base tzdata \
- && bundle install --without development test \
- && bin/rails assets:precompile \
- && apk del build-base nodejs yarn
+COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
+COPY --from=builder /app/ /app/
 
 EXPOSE 3000
 
