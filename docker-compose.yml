@@ -2,7 +2,7 @@ version: '2'
 
 services: 
     rails:
-        image: "nu12/audio_converter:latest"
+        image: "nu12/audio-converter:latest"
         ports: 
             - "3000:3000"
         links:
