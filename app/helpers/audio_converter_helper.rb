@@ -11,22 +11,20 @@ module AudioConverterHelper
     end
 
     def self.write_file user_id, audio, sanitized
-    	File.open("#{AudioConverterHelper::path(user_id)}/#{sanitized}", 'wb') do |file|
+    	File.open("#{AudioConverterHelper::path("#{user_id}/originals")}/#{sanitized}", 'wb') do |file|
         file.write(audio.read)
       end
     end
     
     def self.convert_all user, format, bitrate
-      converted = []
       user.originals.each_index do | i |
         ConvertUpdaterJob.perform_now(user.id, {value: i, max: user.originals.size})
-        converted << AudioConverterHelper::convert(user.id, user.originals[i], format, bitrate)
+        AudioConverterHelper::convert(user.id, user.originals[i], format, bitrate)
       end
-      return converted # Return list of all converted files
     end
 
   	def self.convert user_id, audio, format, bitrate
-      system("ffmpeg -y -i #{AudioConverterHelper::path(user_id)}/#{audio} -b:a #{bitrate}k #{AudioConverterHelper::path(user_id)}/#{audio.split('.')[0]}.#{format}")
+      system("ffmpeg -y -i #{AudioConverterHelper::path(user_id)}/originals/#{audio} -b:a #{bitrate}k #{AudioConverterHelper::path(user_id)}/converted/#{audio.split('.')[0]}.#{format}")
       return "#{audio.split('.')[0]}.#{format}" # Return name of the new file
   	end
 
